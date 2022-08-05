@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { buyItem, sellItem } from "../features/products/productSlice";
 import { selectProducts } from "../features/products/productSlice";
+import Item from "./Item";
 
 const ItemList = () => {
   const products = useSelector(selectProducts);
@@ -10,26 +11,7 @@ const ItemList = () => {
   return (
     <Wrapper className='items'>
       {products?.items?.map((item) => {
-        return (
-          <article className='item'>
-            <img className='item-img' src={item.image} />
-            <h3>{item.name}</h3>
-            <span>{item.price}₺</span>
-            <div className='controls'>
-              <button onClick={() => dispatch(sellItem({ id: item.id }))}>
-                Sell
-              </button>
-              <input type='number' value={0} />
-
-              <button
-                className='buy'
-                onClick={() => dispatch(buyItem({ id: item.id }))}
-              >
-                Buy
-              </button>
-            </div>
-          </article>
-        );
+        return <Item item={item} />;
       })}
     </Wrapper>
   );

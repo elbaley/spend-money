@@ -41,10 +41,29 @@ export const productSlice = createSlice({
         state.balance += product.price;
       }
     },
+    changeCountByAmount: (state, action) => {
+      const product = state.items.find((item) => item.id === action.payload.id);
+      const amount = action.payload.amount;
+
+      if (amount > product.count) {
+        const amountDifference = amount - product.count;
+        if (amountDifference * product.price > state.balance) return;
+
+        product.count = amount;
+        state.balance = state.balance - amountDifference * product.price;
+      } else if (amount === product.count) return;
+      else {
+        const amountDifference = product.count - amount;
+        if (amountDifference * product.price > state.balance) return;
+        product.count = amount;
+        state.balance = state.balance + amountDifference * product.price;
+      }
+    },
   },
 });
 
-export const { increment, buyItem, sellItem } = productSlice.actions;
+export const { increment, buyItem, sellItem, changeCountByAmount } =
+  productSlice.actions;
 
 export const selectProducts = (state) => state.products;
 
