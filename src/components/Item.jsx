@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   buyItem,
@@ -10,10 +11,29 @@ const Item = ({ item }) => {
   const products = useSelector(selectProducts);
   const dispatch = useDispatch();
 
-  const handleCountChange = (value, item) => {
-    const maxAmount = Math.floor(products.balance / item.price);
+  const [count, setCount] = useState(Number(item.count));
+  const canBuy = products.balance / item.price > 0;
+  const canSell = item.count > 0;
 
-    dispatch(changeCountByAmount({ ...item, amount: Number(value) }));
+  // when count is updated dispatch
+  useEffect(() => {
+    dispatch(changeCountByAmount({ ...item, amount: Number(count) }));
+  }, [count]);
+
+  const handleCountChange = (value, item) => {
+    const maxAmount = Math.floor(
+      products.balance / item.price + Number(item.count)
+    );
+
+    if (!value || value < 0) {
+      setCount(Number("0"));
+    }
+    if (value <= maxAmount) {
+      setCount(value);
+    }
+    if (value >= maxAmount) {
+      setCount(maxAmount);
+    }
   };
   return (
     <article className='item'>
@@ -21,18 +41,28 @@ const Item = ({ item }) => {
       <h3>{item.name}</h3>
       <span>{item.price}₺</span>
       <div className='controls'>
-        <button onClick={() => dispatch(sellItem({ id: item.id }))}>
+        <button
+          disabled={!canSell}
+          onClick={() => {
+            dispatch(sellItem({ id: item.id }));
+            setCount(count - 1);
+          }}
+        >
           Sell
         </button>
         <input
           type='number'
-          value={item.count}
-          onChange={(e) => handleCountChange(e.target.value, item)}
+          value={Number(count).toFixed(0)}
+          onChange={(e) => handleCountChange(parseInt(e.target.value), item)}
         />
 
         <button
           className='buy'
-          onClick={() => dispatch(buyItem({ id: item.id }))}
+          disabled={!canBuy}
+          onClick={() => {
+            dispatch(buyItem({ id: item.id }));
+            setCount(count + 1);
+          }}
         >
           Buy
         </button>

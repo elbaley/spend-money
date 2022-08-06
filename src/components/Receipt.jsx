@@ -11,12 +11,11 @@ const Receipt = () => {
           if (item.count) {
             return (
               <li key={item.id}>
-                {item.name} x {item.count} = {item.count * item.price}
+                {item.name} x {item.count} = ${item.count * item.price}
               </li>
             );
           }
         })}
-        <li>Item - 30₺</li>
       </ul>
     </section>
   );

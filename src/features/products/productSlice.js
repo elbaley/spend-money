@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 export const productSlice = createSlice({
   name: "money",
   initialState: {
-    balance: 1000,
+    balance: 100000000000,
     items: [
       {
         id: 1,
@@ -43,18 +43,25 @@ export const productSlice = createSlice({
     },
     changeCountByAmount: (state, action) => {
       const product = state.items.find((item) => item.id === action.payload.id);
-      const amount = action.payload.amount;
+      const amount = parseInt(action.payload.amount);
 
+      console.log(
+        "Trying to change count :",
+        product.name,
+        product.count,
+        amount
+      );
+      // handle buy
       if (amount > product.count) {
         const amountDifference = amount - product.count;
-        if (amountDifference * product.price > state.balance) return;
+        // if (amountDifference * product.price > state.balance) return;
 
         product.count = amount;
         state.balance = state.balance - amountDifference * product.price;
       } else if (amount === product.count) return;
       else {
         const amountDifference = product.count - amount;
-        if (amountDifference * product.price > state.balance) return;
+        // if (amountDifference * product.price > state.balance) return;
         product.count = amount;
         state.balance = state.balance + amountDifference * product.price;
       }
