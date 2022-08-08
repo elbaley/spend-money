@@ -12,7 +12,7 @@ export const getProducts = createAsyncThunk(
         id: item.id,
         name: item.title,
         image: item.image,
-        price: item.price.toFixed(0),
+        price: Math.round(item.price),
         count: 0,
       };
     });
