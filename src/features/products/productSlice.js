@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
 
 export const getProducts = createAsyncThunk(
   "products/getProducts",
-  async (thunkAPI) => {
+  async () => {
     const res = await fetch("/spend-money/data.json").then((data) =>
       data.json()
     );
@@ -29,36 +28,6 @@ export const productSlice = createSlice({
     loading: false,
     error: "",
     balance: 100000000000,
-    itemler: [
-      {
-        id: 1,
-        name: "Big Mac",
-        image: "https://neal.fun/spend/images/big-mac.jpg",
-        price: 2,
-        count: 0,
-      },
-      {
-        id: 2,
-        name: "Smartphone",
-        image: "https://neal.fun/spend/images/smartphone.jpg",
-        price: 699,
-        count: 0,
-      },
-      {
-        id: 3,
-        name: "Ucuncu",
-        image: "https://neal.fun/spend/images/smartphone.jpg",
-        price: 500,
-        count: 0,
-      },
-      {
-        id: 4,
-        name: "Dorduncu",
-        image: "https://neal.fun/spend/images/smartphone.jpg",
-        price: 500,
-        count: 0,
-      },
-    ],
   },
   reducers: {
     buyItem: (state, action) => {
@@ -92,14 +61,12 @@ export const productSlice = createSlice({
       // handle buy
       if (amount > product.count) {
         const amountDifference = amount - product.count;
-        // if (amountDifference * product.price > state.balance) return;
-
         product.count = amount;
         state.balance = state.balance - amountDifference * product.price;
-      } else if (amount === product.count) return;
+      }
+      //handle sell
       else {
         const amountDifference = product.count - amount;
-        // if (amountDifference * product.price > state.balance) return;
         product.count = amount;
         state.balance = state.balance + amountDifference * product.price;
       }
