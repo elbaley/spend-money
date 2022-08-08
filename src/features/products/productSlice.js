@@ -4,7 +4,9 @@ import { useDispatch } from "react-redux";
 export const getProducts = createAsyncThunk(
   "products/getProducts",
   async (thunkAPI) => {
-    const res = await fetch("/data.json").then((data) => data.json());
+    const res = await fetch("/spend-money/data.json").then((data) =>
+      data.json()
+    );
 
     const products = res.map((item) => {
       return {
