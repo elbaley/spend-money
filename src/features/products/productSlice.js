@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { useDispatch } from "react-redux";
 
 export const getProducts = createAsyncThunk(
   "products/getProducts",
-  async (thunkAPI) => {
+  async () => {
     const res = await fetch("/spend-money/data.json").then((data) =>
       data.json()
     );
