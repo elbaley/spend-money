@@ -16,6 +16,9 @@ function App() {
   );
 }
 
-const Wrapper = styled.div``;
+const Wrapper = styled.main`
+  margin-top: 1rem;
+  max-width: 1000px; ;
+`;
 
 export default App;

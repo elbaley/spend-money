@@ -1,16 +1,38 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { useSelector } from "react-redux";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+
+export const getProducts = createAsyncThunk(
+  "products/getProducts",
+  async (thunkAPI) => {
+    const res = await fetch("/data.json").then((data) => data.json());
+
+    const products = res.map((item) => {
+      return {
+        id: item.id,
+        name: item.title,
+        image: item.image,
+        price: item.price.toFixed(0),
+        count: 0,
+      };
+    });
+
+    return products;
+  }
+);
 
 export const productSlice = createSlice({
   name: "money",
   initialState: {
+    items: [],
+    loading: false,
+    error: "",
     balance: 100000000000,
-    items: [
+    itemler: [
       {
         id: 1,
         name: "Big Mac",
         image: "https://neal.fun/spend/images/big-mac.jpg",
-        price: 50,
+        price: 2,
         count: 0,
       },
       {
@@ -18,6 +40,20 @@ export const productSlice = createSlice({
         name: "Smartphone",
         image: "https://neal.fun/spend/images/smartphone.jpg",
         price: 699,
+        count: 0,
+      },
+      {
+        id: 3,
+        name: "Ucuncu",
+        image: "https://neal.fun/spend/images/smartphone.jpg",
+        price: 500,
+        count: 0,
+      },
+      {
+        id: 4,
+        name: "Dorduncu",
+        image: "https://neal.fun/spend/images/smartphone.jpg",
+        price: 500,
         count: 0,
       },
     ],
@@ -66,6 +102,21 @@ export const productSlice = createSlice({
         state.balance = state.balance + amountDifference * product.price;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getProducts.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getProducts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.items = action.payload;
+      state.error = "";
+    });
+    builder.addCase(getProducts.rejected, (state, action) => {
+      state.loading = false;
+      state.items = [];
+      state.error = action.error.message;
+    });
   },
 });
 
